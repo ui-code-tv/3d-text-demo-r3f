@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import {Suspense, useRef} from 'react'
+import {Canvas , useFrame} from '@react-three/fiber'
+import {OrbitControls, useGLTF} from '@react-three/drei'
+import './index.css';
+
+function Model({ ...props }) {
+  const group = useRef()
+  const { nodes, materials } = useGLTF('/demo-text.glb')
+
+  useFrame( ({clock})=> { 
+             group.current.rotation.x =clock.getElapsedTime()
+  })
+  return (
+    <group ref={group} {...props} dispose={null}>
+      <group rotation={[-Math.PI / 2, 0, 0]} scale={1}>
+        <mesh  geometry={nodes['3D_Text_-_D'].geometry} material={nodes['3D_Text_-_D'].material} position={[-20.49, 1.55, 0.32]} scale={0.21}  />
+        <mesh geometry={nodes['3D_Text_-_e'].geometry} material={nodes['3D_Text_-_e'].material} position={[-14.18, 1.55, 0.12]} scale={0.21} />
+        <mesh geometry={nodes['3D_Text_-_e_1'].geometry} material={nodes['3D_Text_-_e_1'].material} position={[8.09, 1.55, 0.12]} scale={0.21} />
+        <mesh geometry={nodes['3D_Text_-_m'].geometry} material={nodes['3D_Text_-_m'].material} position={[-10.13, 1.55, 0.12]} scale={0.21} />
+        <mesh geometry={nodes['3D_Text_-_o'].geometry} material={nodes['3D_Text_-_o'].material} position={[-2.81, 1.55, 0.12]} scale={0.21} />
+        <mesh geometry={nodes['3D_Text_-_T'].geometry} material={nodes['3D_Text_-_T'].material} position={[3.18, 1.55, 0.12]} scale={0.21} />
+        <mesh geometry={nodes['3D_Text_-_x'].geometry} material={nodes['3D_Text_-_x'].material} position={[12.13, 1.55, 0.12]} scale={0.21} />
+        <mesh geometry={nodes['3D_Text_-_t'].geometry} material={nodes['3D_Text_-_t'].material} position={[16.06, 1.55, 0.12]} scale={0.21} />
+      </group>
+    </group>
+  )
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="wrapper">
+      <Canvas  camera={{ fov:70, position: [0,0,15]}}>
+        <Suspense fallback={null}>
+          <ambientLight />
+          <directionalLight intensity={2} position={[0,0,50]} />
+          <Model />
+          <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
+
+        </Suspense>
+
+      </Canvas>
+
     </div>
   );
 }
